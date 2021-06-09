@@ -72,9 +72,9 @@
               dark
               v-model="days"
               v-for="item in items"
-              :key="item"
-              :label="item"
-              :value="item"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
               class="mr-3"
             ></v-checkbox>
           </v-row>
@@ -109,13 +109,33 @@ export default {
     menu1: false,
     menu2: false,
     checkbox: false,
-    items: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    items: [
+      { id: 0, name: "Sun" },
+      { id: 1, name: "Mon" },
+      { id: 2, name: "Tue" },
+      { id: 3, name: "Wed" },
+      { id: 4, name: "Thu" },
+      { id: 5, name: "Fri" },
+      { id: 6, name: "Sat" },
+    ],
     event_name: "",
     days: [],
   }),
 
   methods: {
     createEvent: function () {
+      // var start = moment(this.from), // Sept. 1st
+      //   end = moment(this.to), // Nov. 2nd
+      //   day = this.days;
+
+      // var result = [];
+      // var current = start.clone();
+
+      // while (current.day(7 + day).isBefore(end)) {
+      //   result.push(current.clone());
+      // }
+
+      // console.log(result.map((m) => m.format("LLLL")));
       const eventData = {
         event_name: this.event_name,
         from: this.from,

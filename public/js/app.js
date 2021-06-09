@@ -1966,16 +1966,29 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0__.default.use(vuex__WEBPACK_IMPORTED_MODULE_1__.default);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_1__.default.Store({
   namespaced: true,
-  state: {
-    days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  state: {//     days: [
+    //         { id: 0, name: "Sun" },
+    //         { id: 1, name: "Mon" },
+    //         { id: 2, name: "Tue" },
+    //         { id: 3, name: "Wed" },
+    //         { id: 4, name: "Thu" },
+    //         { id: 5, name: "Fri" },
+    //         { id: 6, name: "Sat" },
+    //     ],
+    //     events: [],
   },
-  actions: {
-    createEvent: function createEvent() {}
+  mutations: {// updateCalendar(state, events) {
+    //     state.events = events;
+    // }
   },
-  mutations: {
-    createEvent: function createEvent(state, event) {
-      console.log('nice');
-    }
+  actions: {// getEvent({ commit }) {
+    //     //fetch the product and their attached categories from the api
+    //     axios.get('/api/get-events')
+    //         .then((response) => {
+    //             commit('updateCalendar', response.data);
+    //         })
+    //         .catch((error) => console.log(error));
+    // },
   }
 }));
 

@@ -16,3 +16,4 @@ use App\Http\Controllers\EventController;
 */
 
 Route::post('/create-event', [EventController::class, 'create']);
+Route::get('/get-events', [EventController::class, 'index']);

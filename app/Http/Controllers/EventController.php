@@ -14,7 +14,24 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        $events = Event::all();
+        return response()->json( $events, 200);
+
+        // $data = [
+        //     [
+        //         'title' => 'The Title', // a property!
+        //         'start' => '2021-06-01', // a property!
+        //         'end' => '2021-06-31' // a property! ** see important note below about 'end' **
+
+        //     ],
+        //     [
+        //         'title' => 'The Title', // a property!
+        //         'start' => '2021-06-01', // a property!
+        //         'end' => '2021-06-31' // a property! ** see important note below about 'end' **
+        //     ],
+        // ];
+
+        // return response()->json($data, 200);
     }
 
     /**
@@ -24,7 +41,7 @@ class EventController extends Controller
      */
     public function create(Request $request)
     {
-        $data = ['Laravel', 'PHP', 'VueJs', 'Vuetify', 'VueRouter', 'Vuex', 'Axios'];
+        // return response()->json($request, 200);
 
         $event = new Event;
         $event->name = $request->event_name;

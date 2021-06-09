@@ -13813,6 +13813,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fullcalendar/vue */ "./node_modules/@fullcalendar/vue/dist/main.js");
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+//
+//
+//
+
 
 
 
@@ -13827,19 +13833,56 @@ __webpack_require__.r(__webpack_exports__);
         plugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__.default, _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__.default],
         initialView: "dayGridMonth",
         dateClick: this.handleDateClick,
-        events: [{
-          title: "event 1",
-          date: "2019-04-01"
-        }, {
-          title: "event 2",
-          date: "2019-04-02"
-        }]
+        events: ""
       }
     };
+  },
+  mounted: function mounted() {
+    this.getAllEvents();
   },
   methods: {
     handleDateClick: function handleDateClick(arg) {
       alert("date click! " + arg.dateStr);
+    },
+    getAllEvents: function getAllEvents() {
+      var _this = this;
+
+      //fetch the product and their attached categories from the api
+      axios.get("/api/get-events").then(function (response) {
+        var events = [];
+        var data = response.data;
+        data.forEach(function (element) {
+          var event_days = element["days"];
+          event_days.forEach(function (day) {
+            if (day != "") {
+              var date = _this.getDates(moment__WEBPACK_IMPORTED_MODULE_3___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_3___default()(element["to"]), day);
+            }
+
+            date.forEach(function (e) {
+              events.push({
+                title: element["name"],
+                date: e
+              });
+            });
+          });
+          console.log(event_days);
+        });
+        _this.calendarOptions.events = events;
+        _this.getAllEvents;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    getDates: function getDates(start, end, day) {
+      var result = [];
+      var current = start.clone();
+
+      while (current.day(7 + day).isBefore(end)) {
+        result.push(current.clone().format("YYYY-MM-DD"));
+      }
+
+      console.log(result);
+      return result;
     }
   }
 });
@@ -13972,13 +14015,43 @@ __webpack_require__.r(__webpack_exports__);
       menu1: false,
       menu2: false,
       checkbox: false,
-      items: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      items: [{
+        id: 0,
+        name: "Sun"
+      }, {
+        id: 1,
+        name: "Mon"
+      }, {
+        id: 2,
+        name: "Tue"
+      }, {
+        id: 3,
+        name: "Wed"
+      }, {
+        id: 4,
+        name: "Thu"
+      }, {
+        id: 5,
+        name: "Fri"
+      }, {
+        id: 6,
+        name: "Sat"
+      }],
       event_name: "",
       days: []
     };
   },
   methods: {
     createEvent: function createEvent() {
+      // var start = moment(this.from), // Sept. 1st
+      //   end = moment(this.to), // Nov. 2nd
+      //   day = this.days;
+      // var result = [];
+      // var current = start.clone();
+      // while (current.day(7 + day).isBefore(end)) {
+      //   result.push(current.clone());
+      // }
+      // console.log(result.map((m) => m.format("LLLL")));
       var eventData = {
         event_name: this.event_name,
         from: this.from,
@@ -39726,9 +39799,9 @@ var render = function() {
                     { attrs: { align: "center", justify: "center" } },
                     _vm._l(_vm.items, function(item) {
                       return _c("v-checkbox", {
-                        key: item,
+                        key: item.id,
                         staticClass: "mr-3",
-                        attrs: { dark: "", label: item, value: item },
+                        attrs: { dark: "", label: item.name, value: item.id },
                         model: {
                           value: _vm.days,
                           callback: function($$v) {
