@@ -14042,6 +14042,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    forceRerender: function forceRerender() {
+      this.$parent.forceRerender();
+    },
     createEvent: function createEvent() {
       // var start = moment(this.from), // Sept. 1st
       //   end = moment(this.to), // Nov. 2nd
@@ -14058,9 +14061,7 @@ __webpack_require__.r(__webpack_exports__);
         to: this.to,
         days: this.days
       };
-      axios.post("/api/create-event", eventData).then(function (response) {
-        return console.log(response);
-      });
+      axios.post("/api/create-event", eventData).then(this.forceRerender());
     }
   },
   computed: {
@@ -14118,8 +14119,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      links: ["Dashboard", "Messages", "Profile", "Updates"]
+      componentKey: 0
     };
+  },
+  methods: {
+    forceRerender: function forceRerender() {
+      this.componentKey += 1;
+    }
   },
   components: {
     CreateEvent: _CreateEvent_vue__WEBPACK_IMPORTED_MODULE_0__.default,
@@ -39903,7 +39909,10 @@ var render = function() {
                         [
                           _c(
                             "v-sheet",
-                            { attrs: { "min-height": "70vh", rounded: "lg" } },
+                            {
+                              key: this.componentKey,
+                              attrs: { "min-height": "70vh", rounded: "lg" }
+                            },
                             [_c("Calendar")],
                             1
                           )

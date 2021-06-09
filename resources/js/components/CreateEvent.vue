@@ -123,6 +123,9 @@ export default {
   }),
 
   methods: {
+    forceRerender: function () {
+      this.$parent.forceRerender();
+    },
     createEvent: function () {
       // var start = moment(this.from), // Sept. 1st
       //   end = moment(this.to), // Nov. 2nd
@@ -142,9 +145,7 @@ export default {
         to: this.to,
         days: this.days,
       };
-      axios
-        .post("/api/create-event", eventData)
-        .then((response) => console.log(response));
+      axios.post("/api/create-event", eventData).then(this.forceRerender());
     },
   },
 

@@ -12,7 +12,7 @@
             </v-col>
 
             <v-col>
-              <v-sheet min-height="70vh" rounded="lg">
+              <v-sheet min-height="70vh" rounded="lg" :key="this.componentKey">
                 <Calendar />
               </v-sheet>
             </v-col>
@@ -28,9 +28,16 @@ import CreateEvent from "./CreateEvent.vue";
 import Calendar from "./Calendar.vue";
 
 export default {
-  data: () => ({
-    links: ["Dashboard", "Messages", "Profile", "Updates"],
-  }),
+  data() {
+    return {
+      componentKey: 0,
+    };
+  },
+  methods: {
+    forceRerender() {
+      this.componentKey += 1;
+    },
+  },
   components: {
     CreateEvent,
     Calendar,
