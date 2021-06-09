@@ -14072,7 +14072,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      events: ""
+      events: []
     };
   },
   components: {
@@ -14085,12 +14085,14 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     storeEvents: function storeEvents(data) {
       var that = this;
-      axios.post("/api/create-event", data).then(that.fetchEvents());
+      axios.post("/api/create-event", data).then(function (res) {
+        that.events = that.fetchEvents();
+      });
     },
     fetchEvents: function fetchEvents() {
       var that = this;
       axios.get("/api/get-events").then(function (res) {
-        return that.events = that.getAllEvents(res.data);
+        that.events = that.getAllEvents(res.data);
       });
     },
     getAllEvents: function getAllEvents(data) {
