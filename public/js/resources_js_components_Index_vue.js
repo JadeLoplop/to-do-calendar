@@ -14072,7 +14072,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      events: []
+      events: ""
     };
   },
   components: {
@@ -14084,26 +14084,24 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     storeEvents: function storeEvents(data) {
-      var that = this;
-      axios.post("/api/create-event", data).then(function (res) {
-        that.events = that.fetchEvents();
-      });
+      axios.post("/api/create-event", data).then(this.fetchEvents());
     },
     fetchEvents: function fetchEvents() {
-      var that = this;
+      var _this = this;
+
       axios.get("/api/get-events").then(function (res) {
-        that.events = that.getAllEvents(res.data);
+        return _this.getAllEvents(res.data);
       });
     },
     getAllEvents: function getAllEvents(data) {
-      var _this = this;
+      var _this2 = this;
 
       var events = [];
       data.forEach(function (element) {
         var event_days = element["days"];
         event_days.forEach(function (day) {
           if (day != "") {
-            var date = _this.getDates(moment__WEBPACK_IMPORTED_MODULE_2___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_2___default()(element["to"]), day);
+            var date = _this2.getDates(moment__WEBPACK_IMPORTED_MODULE_2___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_2___default()(element["to"]), day);
           }
 
           date.forEach(function (e) {
@@ -14115,7 +14113,6 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
       this.events = events;
-      console.log(events);
     },
     getDates: function getDates(start, end, day) {
       var result = [];

@@ -30,7 +30,7 @@ import moment from "moment";
 export default {
   data() {
     return {
-      events: [],
+      events: "",
     };
   },
   components: {
@@ -42,17 +42,11 @@ export default {
   },
   methods: {
     storeEvents(data) {
-      let that = this;
-      axios.post("/api/create-event", data).then((res) => {
-        that.events = that.fetchEvents();
-      });
+      axios.post("/api/create-event", data).then(this.fetchEvents());
     },
 
     fetchEvents() {
-      let that = this;
-      axios.get("/api/get-events").then((res) => {
-        that.events = that.getAllEvents(res.data);
-      });
+      axios.get("/api/get-events").then((res) => this.getAllEvents(res.data));
     },
     getAllEvents(data) {
       let events = [];
@@ -76,7 +70,6 @@ export default {
         });
       });
       this.events = events;
-      console.log(events);
     },
 
     getDates: function (start, end, day) {
