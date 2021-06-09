@@ -123,29 +123,15 @@ export default {
   }),
 
   methods: {
-    forceRerender: function () {
-      this.$parent.forceRerender();
-    },
     createEvent: function () {
-      // var start = moment(this.from), // Sept. 1st
-      //   end = moment(this.to), // Nov. 2nd
-      //   day = this.days;
-
-      // var result = [];
-      // var current = start.clone();
-
-      // while (current.day(7 + day).isBefore(end)) {
-      //   result.push(current.clone());
-      // }
-
-      // console.log(result.map((m) => m.format("LLLL")));
-      const eventData = {
+      let data = {
         event_name: this.event_name,
         from: this.from,
         to: this.to,
         days: this.days,
       };
-      axios.post("/api/create-event", eventData).then(this.forceRerender());
+
+      this.$emit("create", data);
     },
   },
 

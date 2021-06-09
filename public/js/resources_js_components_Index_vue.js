@@ -13813,12 +13813,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fullcalendar/vue */ "./node_modules/@fullcalendar/vue/dist/main.js");
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
 //
 //
 //
-
 
 
 
@@ -13827,62 +13824,27 @@ __webpack_require__.r(__webpack_exports__);
     FullCalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_0__.default // make the <FullCalendar> tag available
 
   },
+  props: ["events"],
   data: function data() {
     return {
       calendarOptions: {
         plugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__.default, _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__.default],
         initialView: "dayGridMonth",
         dateClick: this.handleDateClick,
-        events: ""
+        events: []
       }
     };
   },
-  mounted: function mounted() {
-    this.getAllEvents();
+  computed: {
+    getcalendarOption: function getcalendarOption() {
+      return Object.assign(this.calendarOptions, {
+        events: this.events
+      });
+    }
   },
   methods: {
     handleDateClick: function handleDateClick(arg) {
       alert("date click! " + arg.dateStr);
-    },
-    getAllEvents: function getAllEvents() {
-      var _this = this;
-
-      //fetch the product and their attached categories from the api
-      axios.get("/api/get-events").then(function (response) {
-        var events = [];
-        var data = response.data;
-        data.forEach(function (element) {
-          var event_days = element["days"];
-          event_days.forEach(function (day) {
-            if (day != "") {
-              var date = _this.getDates(moment__WEBPACK_IMPORTED_MODULE_3___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_3___default()(element["to"]), day);
-            }
-
-            date.forEach(function (e) {
-              events.push({
-                title: element["name"],
-                date: e
-              });
-            });
-          });
-          console.log(event_days);
-        });
-        _this.calendarOptions.events = events;
-        _this.getAllEvents;
-      })["catch"](function (error) {
-        return console.log(error);
-      });
-    },
-    getDates: function getDates(start, end, day) {
-      var result = [];
-      var current = start.clone();
-
-      while (current.day(7 + day).isBefore(end)) {
-        result.push(current.clone().format("YYYY-MM-DD"));
-      }
-
-      console.log(result);
-      return result;
     }
   }
 });
@@ -14042,26 +14004,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    forceRerender: function forceRerender() {
-      this.$parent.forceRerender();
-    },
     createEvent: function createEvent() {
-      // var start = moment(this.from), // Sept. 1st
-      //   end = moment(this.to), // Nov. 2nd
-      //   day = this.days;
-      // var result = [];
-      // var current = start.clone();
-      // while (current.day(7 + day).isBefore(end)) {
-      //   result.push(current.clone());
-      // }
-      // console.log(result.map((m) => m.format("LLLL")));
-      var eventData = {
+      var data = {
         event_name: this.event_name,
         from: this.from,
         to: this.to,
         days: this.days
       };
-      axios.post("/api/create-event", eventData).then(this.forceRerender());
+      this.$emit("create", data);
     }
   },
   computed: {
@@ -14089,6 +14039,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _CreateEvent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateEvent.vue */ "./resources/js/components/CreateEvent.vue");
 /* harmony import */ var _Calendar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Calendar.vue */ "./resources/js/components/Calendar.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -14114,22 +14066,66 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      componentKey: 0
+      events: ""
     };
-  },
-  methods: {
-    forceRerender: function forceRerender() {
-      this.componentKey += 1;
-    }
   },
   components: {
     CreateEvent: _CreateEvent_vue__WEBPACK_IMPORTED_MODULE_0__.default,
     Calendar: _Calendar_vue__WEBPACK_IMPORTED_MODULE_1__.default
+  },
+  created: function created() {
+    this.fetchEvents();
+  },
+  methods: {
+    storeEvents: function storeEvents(data) {
+      var that = this;
+      axios.post("/api/create-event", data).then(that.fetchEvents());
+    },
+    fetchEvents: function fetchEvents() {
+      var that = this;
+      axios.get("/api/get-events").then(function (res) {
+        return that.events = that.getAllEvents(res.data);
+      });
+    },
+    getAllEvents: function getAllEvents(data) {
+      var _this = this;
+
+      var events = [];
+      data.forEach(function (element) {
+        var event_days = element["days"];
+        event_days.forEach(function (day) {
+          if (day != "") {
+            var date = _this.getDates(moment__WEBPACK_IMPORTED_MODULE_2___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_2___default()(element["to"]), day);
+          }
+
+          date.forEach(function (e) {
+            events.push({
+              title: element["name"],
+              date: e
+            });
+          });
+        });
+      });
+      this.events = events;
+      console.log(events);
+    },
+    getDates: function getDates(start, end, day) {
+      var result = [];
+      var current = start.clone();
+
+      while (current.day(7 + day).isBefore(end)) {
+        result.push(current.clone().format("YYYY-MM-DD"));
+      }
+
+      console.log(result);
+      return result;
+    }
   }
 });
 
@@ -39553,7 +39549,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("FullCalendar", { attrs: { options: _vm.calendarOptions } })
+  return _c("FullCalendar", { attrs: { options: _vm.getcalendarOption } })
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -39900,7 +39896,9 @@ var render = function() {
                       _c(
                         "v-col",
                         { attrs: { cols: "4" } },
-                        [_c("CreateEvent")],
+                        [
+                          _c("CreateEvent", { on: { create: _vm.storeEvents } })
+                        ],
                         1
                       ),
                       _vm._v(" "),
@@ -39909,11 +39907,8 @@ var render = function() {
                         [
                           _c(
                             "v-sheet",
-                            {
-                              key: this.componentKey,
-                              attrs: { "min-height": "70vh", rounded: "lg" }
-                            },
-                            [_c("Calendar")],
+                            { attrs: { "min-height": "70vh", rounded: "lg" } },
+                            [_c("Calendar", { attrs: { events: _vm.events } })],
                             1
                           )
                         ],
