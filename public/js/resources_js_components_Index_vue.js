@@ -13978,25 +13978,25 @@ __webpack_require__.r(__webpack_exports__);
       menu2: false,
       checkbox: false,
       items: [{
-        id: 0,
+        id: 1,
         name: "Sun"
       }, {
-        id: 1,
+        id: 2,
         name: "Mon"
       }, {
-        id: 2,
+        id: 3,
         name: "Tue"
       }, {
-        id: 3,
+        id: 4,
         name: "Wed"
       }, {
-        id: 4,
+        id: 5,
         name: "Thu"
       }, {
-        id: 5,
+        id: 6,
         name: "Fri"
       }, {
-        id: 6,
+        id: 7,
         name: "Sat"
       }],
       event_name: "",
@@ -14101,7 +14101,7 @@ __webpack_require__.r(__webpack_exports__);
         var event_days = element["days"];
         event_days.forEach(function (day) {
           if (day != "") {
-            var date = _this2.getDates(moment__WEBPACK_IMPORTED_MODULE_2___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_2___default()(element["to"]), day);
+            var date = _this2.getDates(moment__WEBPACK_IMPORTED_MODULE_2___default()(element["from"]), moment__WEBPACK_IMPORTED_MODULE_2___default()(element["to"]), day - 1);
           }
 
           date.forEach(function (e) {

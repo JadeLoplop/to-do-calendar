@@ -57,7 +57,7 @@ export default {
             var date = this.getDates(
               moment(element["from"]),
               moment(element["to"]),
-              day
+              day - 1
             );
           }
 
